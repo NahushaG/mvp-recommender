@@ -54,39 +54,38 @@ mvp-recommender/
 
 1. Clone the repository:
 
-```bash
-git clone https://github.com/NahushaG/mvp-recommender.git
-cd mvp-recommender
-```
+  ```bash
+  git clone https://github.com/NahushaG/mvp-recommender.git
+  cd mvp-recommender
+  ```
 
 2. Create an environment file:
 
-```bash
-cp .env_samplefile .env
-```
+  ```bash
+  cp .env_samplefile .env
+  ```
 
-Fill in the required variables:
-
-* `DB_USER`, `DB_PASSWORD`, `DB_NAME`
-* `OPENAI_API_KEY`
-* Other environment variables as needed
+  Fill in the required variables:
+  * `DB_USER`, `DB_PASSWORD`, `DB_NAME`
+  * `OPENAI_API_KEY`
+  * Other environment variables as needed
 
 3. Build and run:
 
-```bash
-./gradlew build
-./gradlew bootRun
-```
+  ```bash
+  ./gradlew build
+  ./gradlew bootRun
+  ```
 
-Or run via your IDE (Spring Boot / Grails / etc).
+  Or run via your IDE (Spring Boot / Grails / etc).
 
 4. Access API endpoints using curl or Postman, for example:
 
-```
-POST /api/v1/fpl/squad/generate
-```
-
----
+  ```
+  POST /api/v1/fpl/squad/generate
+  ```
+  
+  ---
 
 ## 🛠️ Configuration
 
@@ -164,3 +163,4 @@ Feel free to fork or contribute. Open an issue or PR for suggestions or fixes.
 
 **Nahusha G**
 GitHub: [NahushaG](https://github.com/NahushaG)
+
