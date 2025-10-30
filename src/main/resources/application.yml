@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: mvp-recommender
+
+  datasource:
+    url:  jdbc:postgresql://localhost:5432/mvpdb
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:password}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximum=500,expireAfterWrite=1h
+
+mvp:
+  api:
+    base-url: ${FPL_API_BASE_URL:https://fantasy.premierleague.com/api}
+    bootstrap-url: ${mvp.api.base-url}/bootstrap-static/
+    player-url: ${mvp.api.base-url}/element-summary/{id}/
+    fixtures-url: ${mvp.api.base-url}/fixtures/
+
+  ai:
+    provider: openai
+    openai:
+      api-key: ${OPENAI_API_KEY:your-api-key}
+      model: ${MVP_AI_MODEL:gpt-3.5-turbo}
+      max-tokens: ${MVP_AI_MAX_TOKENS:500}
+      temperature: ${MVP_AI_TEMPERATURE:0.7}
+
+  scheduler:
+    update-data-cron: "0 0 2 * * ?" #Daily at 2 AM
+    weekly-alert-cron: "0 0 9 * * FRI" #Friday at 8 AM
+
+  notification:
+    email:
+      enabled: true
+      from: {SENDERS_EMAIL_ID}
+
