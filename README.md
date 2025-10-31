@@ -142,6 +142,148 @@ GET /api/v1/fpl/mvp/top
 
 ---
 
+## 📖 Swagger / API Documentation
+
+The MVP Recommender exposes a **REST API** documented via **Swagger/OpenAPI 3.1**.
+
+- **Interactive docs:** `http://localhost:8080/swagger-ui.html`
+- **Raw OpenAPI JSON:** `http://localhost:8080/v3/api-docs`
+- **API Version:** v1.0
+- **Title:** MVP Recommender API
+- **Description:** API for Fantasy Premier League MVP Recommender
+- **License:** Apache 2.0
+- **Contact:** Nahusha G
+- **Project GitHub:** [https://github.com/NahushaG/mvp-recommender](https://github.com/NahushaG/mvp-recommender)
+
+**Server:**
+```
+http://localhost:8080
+```
+
+### Endpoints
+
+| Endpoint | Method | Description | Request Body | Response |
+|----------|--------|-------------|--------------|----------|
+| `/api/v1/fpl/squad/generate` | POST | Generate a budget squad | `BudgetSquadRequest` | `BudgetSquadResponse` |
+| `/api/v1/fpl/data/refresh` | POST | Manually refresh FPL data | None | Status / message |
+| `/api/v1/fpl/mvp/top-players` | GET | Get top MVP players | None | `MvpRecommendationResponse` |
+| `/api/v1/fpl/health` | GET | Health check | None | Status info |
+| `/api/v1/fpl/gameWeek/current` | GET | Get current gameweek | None | Integer / GameWeek info |
+| `/api/v1/fpl/alerts/weekly` | GET | Get weekly FPL alert | None | `WeeklyAlert` |
+
+### Key Schemas
+
+| Schema | Description |
+|--------|-------------|
+| `BudgetSquadRequest` | Request payload for generating a squad |
+| `BudgetSquadResponse` | Response for generated squad including total cost and analysis |
+| `PlayerRecommendation` | Details of a recommended player |
+| `MvpRecommendationResponse` | Top MVP players for the current gameweek |
+| `PositionWiseRecommendation` | Recommendations grouped by player position |
+| `InjuryUpdate` | Injury status of a player |
+| `PlayerAlert` | Individual player alert |
+| `WeeklyAlert` | Aggregated weekly FPL alert |
+
+### Example Requests
+
+#### Generate Squad
+
+**Request:**
+```json
+{
+  "budget": 100.0,
+  "formation": "3-4-3",
+  "mustHavePlayers": [5, 82, 430],
+  "excludedPlayers": [178, 256]
+}
+```
+
+**Response:**
+```json
+{
+  "squad": [
+    {"id": 5, "name": "Player A", "position": "Midfielder", "cost": 12.0},
+    {"id": 82, "name": "Player B", "position": "Forward", "cost": 10.5}
+  ],
+  "totalCost": 98.5,
+  "analysis": "AI recommends Player A for best ROI based on last 5 matches."
+}
+```
+
+#### Top MVP Players
+
+**Request:**
+```
+GET /api/v1/fpl/mvp/top-players
+```
+
+**Response:**
+```json
+[
+  {"id": 82, "name": "Player B", "position": "Forward", "points": 120},
+  {"id": 5, "name": "Player A", "position": "Midfielder", "points": 115}
+]
+```
+
+#### Weekly Alert
+
+**Request:**
+```
+GET /api/v1/fpl/alerts/weekly
+```
+
+**Response:**
+```json
+{
+  "alerts": [
+    {"playerId": 10, "alertType": "Injury", "message": "Player X out for 2 weeks"},
+    {"playerId": 25, "alertType": "Transfer", "message": "Player Y transferred to Team Z"}
+  ]
+}
+```
+
+---
+
+## ✅ Usage Examples
+
+### Budget Squad Request
+
+```json
+{
+  "budget": 100.0,
+  "formation": "3-4-3",
+  "mustHavePlayers": [5, 82, 430],
+  "excludedPlayers": [178, 256]
+}
+```
+
+Expected response includes:
+
+* A recommended squad (players per position)
+* Total cost
+* AI-generated analysis / insights
+
+---
+
+✅ Usage Examples
+Budget Squad Request
+{
+"budget": 100.0,
+"formation": "3-4-3",
+"mustHavePlayers": [5, 82, 430],
+"excludedPlayers": [178, 256]
+}
+
+
+Expected response includes:
+
+A recommended squad (players per position)
+
+Total cost
+
+AI-generated analysis / insights
+
+
 ## 🎯 Future Improvements / Roadmap
 * Test coverage: Add comprehensive test cases to capture various implementation and integration scenarios
 * Frontend project: Build a user-friendly frontend (Preferred language: React) to showcase results

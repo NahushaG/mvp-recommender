@@ -31,6 +31,7 @@ dependencies {
 	implementation 'org.apache.groovy:groovy'
 	implementation 'com.openai:openai-java:4.6.1'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.13'
 	implementation 'com.github.ben-manes.caffeine:caffeine' //caching
 	implementation 'org.springframework.boot:spring-boot-starter-quartz' //Scheduling
 	implementation 'org.springframework.boot:spring-boot-starter-mail' //Email notification
