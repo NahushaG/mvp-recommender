@@ -18,6 +18,8 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -109,6 +111,10 @@ public class FPLDataService {
 
     public List<Player> getAllPlayers() {
         return playerRepository.findAll();
+    }
+
+    public Set<Long> getAvailablePlayersId() {
+        return playerRepository.getAllPlayerIds();
     }
 
     public List<Player> getPlayersByPosition(Integer position) {

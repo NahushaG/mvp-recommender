@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
@@ -19,4 +20,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Query("SELECT p FROM Player p WHERE p.nowCost <= :maxCost AND p.position = :position ORDER BY p.totalPoints DESC")
     List<Player> findAffordablePlayersByPosition(@Param("maxCost") Integer maxCost, @Param("position") Integer position);
+
+    @Query("SELECT p.id FROM Player p")
+    Set<Long> getAllPlayerIds();
 }
