@@ -88,7 +88,7 @@ public class MvpRecommendationService {
 
             List<Player> positionPlayers = playerRepository.findAffordablePlayersByPosition(
                     (int) remainingBudget, position);
-
+            if (positionPlayers == null) positionPlayers = List.of();
             List<Player> bestPlayers = positionPlayers.stream()
                     .filter(p -> !request.getExcludedPlayers().contains(p.getId()))
                     .peek(this::calculatePlayerMetrics)
@@ -135,7 +135,7 @@ public class MvpRecommendationService {
     }
 
     // --- Supporting methods (unchanged logic) ---
-    private List<Player> getTopPlayersForPosition(Integer position, int limit) {
+    public List<Player> getTopPlayersForPosition(Integer position, int limit) {
         List<Player> allPlayers = playerRepository.findByPosition(position);
         return allPlayers.stream()
                 .filter(p -> !"i".equals(p.getStatus()) && !"u".equals(p.getStatus()))

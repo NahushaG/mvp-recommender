@@ -3,6 +3,7 @@ package com.project.mvprecommender.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.mvprecommender.dto.BudgetSquadRequest;
 import com.project.mvprecommender.dto.BudgetSquadResponse;
+import com.project.mvprecommender.dto.MvpRecommendationResponse;
 import com.project.mvprecommender.service.FPLDataService;
 import com.project.mvprecommender.service.MvpRecommendationService;
 import com.project.mvprecommender.service.WeeklyAlertService;
@@ -16,14 +17,20 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+/**
+ * TEST-CTRL
+ * Controller-level test suite for FPL API endpoints.
+ * Covers both valid and invalid input scenarios, ensuring proper validation, response codes, and service interactions.
+ */
 @WebFluxTest(FplController.class)
 class FplControllerTest {
-    
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -52,7 +59,7 @@ class FplControllerTest {
     }
 
     /**
-     *  TC1 - Valid request
+     * TC1 - Valid request
      * Expected: 200 OK with a valid BudgetSquadResponse
      */
     @Test
@@ -195,7 +202,36 @@ class FplControllerTest {
     }
 
     /**
-     * TC7 - Service throws unexpected exception
+     * TC7 - Null or empty player lists
+     * Expected: 200 OK (should handle gracefully, no crash)
+     */
+    @Test
+    void testGenerateBudgetSquad_EmptyPlayerLists() throws Exception {
+        BudgetSquadRequest request = BudgetSquadRequest.builder()
+                .budget(90.0)
+                .formation("4-4-2")
+                .mustHavePlayers(List.of())
+                .excludedPlayers(List.of())
+                .build();
+
+        BudgetSquadResponse response = new BudgetSquadResponse();
+        response.setTotalCost(85.0);
+        response.setSelectedPlayers(List.of());
+
+        when(mvpService.generateBudgetSquad(any())).thenReturn(Mono.just(response));
+
+        webTestClient.post()
+                .uri("/api/v1/fpl/squad/generate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(objectMapper.writeValueAsString(request))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.totalCost").isEqualTo(85.0);
+    }
+
+    /**
+     * TC9 - Service throws unexpected exception
      * Expected: 500 INTERNAL_SERVER_ERROR with code "INTERNAL_ERROR"
      */
     @Test
@@ -220,5 +256,76 @@ class FplControllerTest {
                 .jsonPath("$.code").isEqualTo("INTERNAL_ERROR");
     }
 
+    /**
+     * TC8 - Null request body
+     * Expected: 400 BAD_REQUEST
+     */
+    @Test
+    void testGenerateBudgetSquad_NullBody() {
+        webTestClient.post()
+                .uri("/api/v1/fpl/squad/generate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
 
+    /**
+     * TC10 - Health endpoint check
+     * Expected: 200 OK with running status
+     */
+    @Test
+    void testHealthEndpoint() {
+        webTestClient.get()
+                .uri("/api/v1/fpl/health")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).isEqualTo("FPL MVP Recommender is running");
+    }
+
+    /**
+     * TC11 - Current GameWeek endpoint
+     * Expected: 200 OK with valid integer response
+     */
+    @Test
+    void testGetCurrentGameWeek() {
+        when(fplDataService.getCurrentGameweek()).thenReturn(10);
+
+        webTestClient.get()
+                .uri("/api/v1/fpl/gameWeek/current")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Integer.class).isEqualTo(10);
+    }
+
+    /**
+     * TC12 - Manual data refresh
+     * Expected: 200 OK with confirmation message
+     */
+    @Test
+    void testRefreshData() {
+        webTestClient.post()
+                .uri("/api/v1/fpl/data/refresh")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).isEqualTo("Data refresh initiated");
+    }
+
+    /**
+     * TC13 - Top MVP Players endpoint
+     * Expected: 200 OK with map response of players by position
+     */
+    @Test
+    void testGetTopMvpPlayers() {
+        MvpRecommendationResponse response = new MvpRecommendationResponse();
+        response.setTopPlayersByPosition(Map.of()); // empty map for test
+
+        when(mvpService.getTopMvpPlayers()).thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri("/api/v1/fpl/mvp/top-players")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.topPlayersByPosition").isMap();
+    }
 }

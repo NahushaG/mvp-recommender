@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.support.WebExchangeBindException;
+import org.springframework.web.server.ServerWebInputException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,12 @@ public class GlobalExceptionHandler {
     // Handle business-rule validation (IllegalArgumentException)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgs(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body(new ErrorResponse("INVALID_REQUEST", ex.getMessage()));
+    }
+
+    // Handle business-rule validation (ServerWebInputException)
+    @ExceptionHandler(ServerWebInputException.class)
+    public ResponseEntity<?> handleIllegalArgs(ServerWebInputException ex) {
         return ResponseEntity.badRequest().body(new ErrorResponse("INVALID_REQUEST", ex.getMessage()));
     }
 
