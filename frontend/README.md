@@ -21,9 +21,9 @@ Generate optimal squads based on budget, formation, and player preferences with 
 ## Installation
 
 \`\`\`bash
-# Clone the repo
+# Clone the repo and select frontend
 git clone https://github.com/yourusername/fpl-squad-generator.git
-cd fpl-squad-generator
+cd frontend
 
 # Install dependencies
 npm install
@@ -45,6 +45,8 @@ Open your browser at \`http://localhost:5173\` (default Vite port).
 \`\`\`
 src/
 ├─ api/
+|  |
+|  └─ apiClient           # axios client
 │  └─ fplService.ts       # API calls and type definitions
 ├─ components/
 │  ├─ PlayerCard.tsx      # Player card component
