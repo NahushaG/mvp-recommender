@@ -126,10 +126,11 @@ export default defineConfig([
 ---
 
 ## Future Enhancements
-
+- Test case 
+- More dynamic layout and option
 - Real **football pitch visualization** for squad layout.
 - Interactive **drag-and-drop** squad builder.
-- **Integration with live FPL API** for real-time updates.
 - Enhanced AI suggestions for **weekly transfers**.
 
-EOT
+👤 Author
+Nahusha G GitHub: NahushaG
