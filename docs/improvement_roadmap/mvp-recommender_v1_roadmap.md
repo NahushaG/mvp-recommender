@@ -135,13 +135,14 @@ This document tracks the current implementation (✅ = completed in v0) and plan
 
 ## 🏷️ Ticket Abbreviations
 
-| Category              | Abbreviation | Description                           |
-| --------------------- | ------------ | ------------------------------------- |
-| Core Features         | CORE-xx      | Core functionality & data flow        |
-| Backend Enhancements  | BE-xx        | Service, DB, or AI logic improvements |
-| Frontend Enhancements | FE-xx        | UI and UX related improvements        |
-| Testing               | TEST-xx      | Unit, integration, or load testing    |
-| Non-Functional        | NFR-xx       | Performance, monitoring, deployment   |
+| Category              | Abbreviation | Description                                      |
+| --------------------- | ------------ | -------------------------------------------------|
+| Core Features         | CORE-xx      | Core functionality & data flow                   |
+| Backend Enhancements  | BE-xx        | Service, DB, or AI logic improvements            |
+| Frontend Enhancements | FE-xx        | UI and UX related improvements                   |
+| Testing               | TEST-xx      | Unit, integration, or load testing               |
+| Non-Functional        | NFR-xx       | Performance, monitoring, deployment              |
+| Application           | APP-xx       | Changes assoeciated with complete project        |
 
 ---
 
