@@ -148,10 +148,16 @@ public class MvpRecommendationService {
     private void calculatePlayerMetrics(Player player) {
         player.setValueForMoney(player.calculateValueForMoney());
         List<Fixture> fixtures = fplDataService.getUpcomingFixtures(player.getTeam(), 5);
+
         double avgDifficulty = fixtures.stream()
-                .mapToInt(f -> f.getTeamHome().equals(player.getTeam()) ?
-                        f.getTeamHomeDifficulty() : f.getTeamAwayDifficulty())
-                .average().orElse(3.0);
+                .mapToInt(f -> {
+                    boolean isHome = f.getTeamHome() != null && f.getTeamHome().equals(player.getTeam());
+                    Integer diff = isHome ? f.getTeamHomeDifficulty() : f.getTeamAwayDifficulty();
+                    return diff != null ? diff : 3; // default difficulty = 3 (average)
+                })
+                .average()
+                .orElse(3.0);
+
         player.setFixtureScore(5.0 - avgDifficulty);
     }
 
@@ -189,8 +195,12 @@ public class MvpRecommendationService {
     private String formatFixture(Fixture fixture, Integer playerTeamId) {
         Team homeTeam = fplDataService.getTeam(fixture.getTeamHome());
         Team awayTeam = fplDataService.getTeam(fixture.getTeamAway());
-        boolean isHome = fixture.getTeamHome().equals(playerTeamId);
-        int difficulty = isHome ? fixture.getTeamHomeDifficulty() : fixture.getTeamAwayDifficulty();
+
+        boolean isHome = fixture.getTeamHome() != null && fixture.getTeamHome().equals(playerTeamId);
+
+        Integer diff = isHome ? fixture.getTeamHomeDifficulty() : fixture.getTeamAwayDifficulty();
+        int difficulty = diff != null ? diff : 3; // default difficulty
+
         String opponent = isHome ? awayTeam.getShortName() : homeTeam.getShortName();
         String venue = isHome ? "(H)" : "(A)";
         return String.format("%s %s [Diff: %d]", opponent, venue, difficulty);
